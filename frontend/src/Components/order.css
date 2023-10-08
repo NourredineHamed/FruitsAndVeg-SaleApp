@@ -1,0 +1,96 @@
+
+
+
+.FORM{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  label {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+  }
+  
+  input,
+  select {
+    width:700px;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  select option:first-of-type {
+    display: none;
+  }
+  
+  button[type="submit"] {
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 300px;
+  
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #2d862d;
+  }
+  .Orderfieldset{
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+    border-radius: 10px;
+  }
+  .amount{
+    font-size: 30px;
+     
+  }
+  ::placeholder{
+ 
+    color: black;
+  }
+  .form-inputs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .form-inputs label {
+    display: inline-block;
+    margin-right: 10px;
+
+  }
+  
+  .form-inputs select,
+  .form-inputs input {
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  .city-postalcode-container label {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .city-postalcode-container input {
+    display: inline-block;
+    width: 100px; /* adjust width as needed */
+  }
+  select[name="city"] {
+    width: 490px;
+  }
+  select[name="region"] {
+    width: 725px;
+  }
+  input[name="postalCode"] {
+    width: 200px;
+  }
+    

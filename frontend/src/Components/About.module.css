@@ -1,0 +1,56 @@
+.aboutcontainer {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px;
+  overflow-x: auto; /* Add horizontal scrolling for small screens */
+}
+
+.tableabout {
+  width: 80%; /* Set the table width to 100% to make it responsive */
+  border-collapse: collapse;
+}
+
+/* Rest of your CSS remains the same */
+
+.tableabout td {
+  vertical-align: top; /* align contents at the top */
+  padding: 20px; /* add padding to cells */
+}
+
+.tableabout img {
+  max-width: 100%;
+  height: auto;
+}
+
+h1 {
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.tableabout p {
+  font-size: 18px;
+  line-height: 1.5;
+  color: #444;
+  margin-bottom: 30px;
+}
+.tableabout {
+  margin: 0 auto;
+}
+
+.commanderbutton {
+  display: block;
+  margin: 20px auto;
+  background-color: #00b123;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 5px;
+  padding: 20px 40px;
+  font-size: 16px;
+  cursor: pointer;
+}

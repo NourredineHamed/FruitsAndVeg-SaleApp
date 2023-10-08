@@ -1,0 +1,81 @@
+.div2 {
+  width: 1000px;
+  box-shadow: 1px #f2f2f2; /* Center align the container */
+  margin-left: 5cm;
+  font-family: "Roboto", sans-serif;
+}
+
+/* Define styles for the container */
+.container2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.container2 h2 {
+  margin-left: -15px;
+}
+.container2 button {
+  align-items: center;
+  background-color: rgb(74, 153, 74);
+  margin-right: 2%;
+  margin-top: 8%;
+  margin-top: 8%;
+  font-weight: bold;
+  border-radius: 3px;
+  width: 2.5cm;
+  height: 0.9cm;
+  border: none;
+  color: #ffffff;
+}
+.table2 {
+  margin-left: -20px;
+  width: 100%;
+  box-shadow: 0px 1px 5px 2px #d1d0d0;
+  font-size: 15px;
+  border-collapse: collapse;
+}
+.table2 th,
+.table2 td {
+  padding: 4px; /* Add padding to the cells */
+  border-bottom: 1px solid #ddd; /* Add a horizontal border only */
+  text-align: center; /* Center-align cell content */
+}
+.table2 td {
+  font-weight: bold;
+  color: rgb(54, 54, 54);
+}
+.table2 th {
+  color: white;
+  background-color: rgb(74, 153, 74);
+}
+.icon {
+  width: 20%;
+}
+/* Define styles for the button */
+.deletebutton {
+  background-color: transparent; /* Make the button transparent */
+  border: none; /* Remove button border */
+  border-radius: 50%; /* Make the button circular */
+  padding: 8px; /* Add padding to the button */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.table2 input {
+  width: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.icondelete {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.buttonContainer {
+  display: flex; /* Use flexbox to make buttons appear in a row */
+  gap: 4px; /* Add spacing between buttons (adjust as needed) */
+  align-items: center; /* Center-align the buttons vertically */
+}

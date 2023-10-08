@@ -1,0 +1,148 @@
+.shopping-cart-title {
+    font-size: 3rem;
+    margin-bottom: 3rem;
+  }
+  
+  .shopping-cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    
+  height: 100px;
+  margin-left: 50px;
+  margin-right: 70px;
+  align-items: center;
+
+
+  }
+  
+  .shopping-cart-table th,
+  .shopping-cart-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+  }
+  
+  .shopping-cart-table th {
+    font-weight: bold;
+  }
+  
+  
+  
+  .product-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .product-image {
+    width: 6rem;
+    margin-right: 1rem;
+  }
+  
+  .product-name {
+    margin: 0;
+  }
+  
+  .product-price {
+    margin: 0;
+    color: #888;
+  }
+  
+  .quantity-control {
+    display: flex;
+    align-items: center;
+  }
+  
+  .quantity-input {
+    width: 50px;
+    margin: 0 0.5rem;
+    padding: 0.25rem;
+    text-align: center;
+    background-color: #e9dddd;
+  }
+  
+  .quantity-button {
+    background-color: #0da540;
+    color: #ffffff;
+    border: none;
+    font-size: 27px;
+    width: 36px;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+    border-radius: 0.5rem;
+    
+  }
+  
+  .quantity-button:hover {
+    background-color: #666;
+    color: #fff;
+  }
+  
+  .remove-button {
+    background-color: rgb(224, 229, 225);
+    color: #0d6d1d;
+    border: none;
+    font-size: 24px;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    margin-right: 40px;
+    
+  }
+
+  @media screen and (max-width: 600px) {
+    .product-info {
+      flex-direction: column;
+    }
+  
+    .product-image {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
+  
+    .quantity-control {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .quantity-input {
+      margin: 0.25rem 0;
+    }
+  }
+  .table-header{
+    background-color: #e5e5e5;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  height: 30px;
+  font-size: 20px;
+
+  }
+  .table-footer{
+    
+    margin-top: 20px;
+    font-size: 30px;
+  } 
+  .totale{
+    color: #0da540; 
+    font-size: 30px;
+    
+  }
+  .price{
+    font-size: 20px;
+   font-weight: 500;
+  }
+  .submit-button{
+    color:rgb(224, 229, 225);
+    background-color: #0da540;
+    font-size: 25px;
+    box-shadow: 0 0 0.5rem rgb(255, 255, 255);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border-color: #ffffff;
+    margin-left: 1200px;
+    
+
+
+  }
