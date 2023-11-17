@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../models/user.entity';
-
+import { UserRole } from '../models/user.entity';
 
 @Injectable()
 export class UserService {
@@ -11,13 +11,17 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
-
-  async signUp(username: string, email: string, password: string): Promise<User> {
+  async signUp(username: string, email: string, password: string, role?: UserRole): Promise<User> {
     const user = new User();
     user.username = username;
     user.email = email;
     user.password = password;
+    user.role = role || UserRole.User; 
     return await this.userRepository.save(user);
+  }
+  
+  async getAllUsers(): Promise<User[]> {
+    return await this.userRepository.find();
   }
 
   async findByUsername(username: string): Promise<User | undefined> {

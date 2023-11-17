@@ -5,8 +5,8 @@ import * as cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.use(cors()); // Enable CORS
+  app.use(cors()); 
   app.setGlobalPrefix('api');
-  await app.listen(3000);
+  await app.listen(4000);
 }
 bootstrap();

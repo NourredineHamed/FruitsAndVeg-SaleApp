@@ -11,7 +11,7 @@ export class CategorieController {
 
 
 
-    @Get()
+    @Get('allcat')
     async findAll(): Promise<CategoriePostEntity[]> {
         return this.categorieService.findAll();
         
