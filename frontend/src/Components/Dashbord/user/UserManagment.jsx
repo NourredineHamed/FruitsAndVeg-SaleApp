@@ -124,9 +124,7 @@ const UserManagment = () => {
                     <button onClick={() => handleEdit(user)} className={styles.deletebutton }>
                       <img className={styles.icondelete} src={process.env.PUBLIC_URL + '/icons/update.svg'} alt="Update Icon" />
                     </button>
-                    <button onClick={() => handleDelete(user.id)} className={styles.deletebutton }>
-                      <img className={styles.icondelete} src={process.env.PUBLIC_URL + '/icons/Delete.svg'} alt="Delete Icon" />
-                    </button>
+
                   </div>
                 )}
               </td>

@@ -69,7 +69,7 @@ const SideNavBar = ({ onCategoryClick }) => {
             <a
               key={category}
               className={isExpanded ? "menu-item" : "menu-item menu-item-NX"}
-              href="#"
+             
               onClick={() => handleCategoryClick(category)}
             >
               <img className="menu-item-icon" src={icon} alt="" srcSet="" />

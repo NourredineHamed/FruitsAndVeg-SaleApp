@@ -12,50 +12,92 @@ const CategoryManagement = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("http://localhost:4000/api/categorie/allcat");
+      const response = await fetch(
+        "http://localhost:4000/api/categorie/allcat"
+      );
       const data = await response.json();
       setCategories(data);
       console.log(response);
     } catch (error) {
-      
       console.error("Error fetching categories:", error);
     }
   };
 
   const handleEdit = (category) => {
-    setEditableCategory(category);
+    // Create a copy of the category without the 'products' property
+    const categoryWithoutProducts = { ...category };
+    delete categoryWithoutProducts.products;
+  
+    // Set the editableCategory without the 'products' property
+    setEditableCategory(categoryWithoutProducts);
   };
+  
 
   const handleSave = async () => {
     try {
-      await fetch(`http://localhost:4000/api/categorie/update/${editableCategory.idCategorie}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editableCategory),
-      });
-      fetchCategories(); // Refresh the category list after updating
+      console.log("editableCategory:", editableCategory);
+      if (!editableCategory.idCategorie) {
+        // If the category doesn't have an id, it's a new category
+        await fetch("http://localhost:4000/api/categorie/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: editableCategory.name,
+            // Exclude createdAt and updatedAt if not needed by the API
+          }),
+        });
+        fetchCategories();
+      } else {
+        // If the category has an id, it's an existing category
+        console.log("editableCategory:", editableCategory);
+        await fetch(
+          `http://localhost:4000/api/categorie/update/${editableCategory.idCategorie}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(editableCategory),
+          }
+        );
+        fetchCategories();
+      }
+  
+      // Refresh the category list after updating or creating
+
       setEditableCategory(null);
     } catch (error) {
-      console.error("Error updating category:", error);
+      console.error("Error updating/creating category:", error);
     }
   };
-
-
+  
 
   const handleInputChange = (e, field) => {
-    const updatedCategory = { ...editableCategory, [field]: e.target.value };
+    const updatedCategory = {
+      ...editableCategory,
+      [field]: e.target.value,
+    };
+  
     setEditableCategory(updatedCategory);
+  
+    // Update the state of the categories array
+    const updatedCategories = categories.map((c) =>
+      c.idCategorie === updatedCategory.idCategorie ? updatedCategory : c
+    );
+    setCategories(updatedCategories);
   };
+  
 
   const handleAddRow = () => {
     const newCategory = {
-      name: "",
-      created_at: "",
-      updated_at: "",
+      name: " ", // Set a default name or an appropriate value
+
     };
-    setCategories([...categories, newCategory]);
+
+    // Add the new category to the beginning of the categories array
+    setCategories([newCategory, ...categories]);
     setEditableCategory(newCategory);
   };
 
@@ -97,39 +139,23 @@ const CategoryManagement = () => {
                 {editableCategory?.idCategorie === category.idCategorie ? (
                   <input
                     type="text"
-                    value={category.name}
+                    value={editableCategory?.name || ""}
                     onChange={(e) => handleInputChange(e, "name")}
                   />
                 ) : (
                   category.name
                 )}
               </td>
-              <td>
-                {editableCategory?.idCategorie === category.idCategorie ? (
-                  <input
-                    type="text"
-                    value={category.createdAt}
-                    onChange={(e) => handleInputChange(e, "createdAt")}
-                  />
-                ) : (
-                  category.createdAt
-                )}
-              </td>
-              <td>
-                {editableCategory?.idCategorie === category.idCategorie ? (
-                  <input
-                    type="text"
-                    value={category.updatedAt}
-                    onChange={(e) => handleInputChange(e, "updatedAt")}
-                  />
-                ) : (
-                  category.updatedAt
-                )}
-              </td>
+              <td>{category.createdAt}</td>
+              <td>{category.updatedAt}</td>
               <td>
                 {editableCategory?.idCategorie === category.idCategorie ? (
                   <button onClick={handleSave} className={styles.deletebutton}>
-                      <img className={styles.icondelete} src={process.env.PUBLIC_URL + '/icons/tick.svg'} alt="Save Icon" />
+                    <img
+                      className={styles.icondelete}
+                      src={process.env.PUBLIC_URL + "/icons/tick.svg"}
+                      alt="Save Icon"
+                    />
                   </button>
                 ) : (
                   <div className={styles.buttonContainer}>
@@ -137,9 +163,12 @@ const CategoryManagement = () => {
                       className={styles.deletebutton}
                       onClick={() => handleEdit(category)}
                     >
-                        <img className={styles.icondelete} src={process.env.PUBLIC_URL + '/icons/update.svg'} alt="Update Icon" />
+                      <img
+                        className={styles.icondelete}
+                        src={process.env.PUBLIC_URL + "/icons/update.svg"}
+                        alt="Update Icon"
+                      />
                     </button>
-
                   </div>
                 )}
               </td>
