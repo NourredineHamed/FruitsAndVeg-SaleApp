@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';  // Import Axios
+
 import styles from "./User.module.css"
 
-
 const UserManagment = () => {
-  const [users, setUsers] = useState([
-    { id: 1, name: 'John Doe', email: 'john@example.com' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
-    { id: 3, name: 'Bob Johnson', email: 'bob@example.com' },
-  ]);
-
+  const [users, setUsers] = useState([]);
   const [editableUser, setEditableUser] = useState(null);
+
+  // Fetch users from the API when the component mounts
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/api/users/allusers');
+        setUsers(response.data);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []); 
 
   const handleEdit = (user) => {
     setEditableUser(user);
@@ -75,11 +85,11 @@ const UserManagment = () => {
                 {editableUser?.id === user.id ? (
                   <input
                     type="text"
-                    value={user.name}
+                    value={user.username}
                     onChange={(e) => handleInputChange(e, 'name', user)}
                   />
                 ) : (
-                  user.name
+                  user.username
                 )}
               </td>
               <td>

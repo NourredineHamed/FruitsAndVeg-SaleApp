@@ -63,7 +63,14 @@ const CategoryManagement = () => {
     <div className={styles.div2}>
       <div className={styles.container2}>
         <h2>Category Management</h2>
-     
+        <button onClick={handleAddRow} className={styles.button2}>
+          <img
+            className={styles.icon}
+            src={process.env.PUBLIC_URL + "/icons/add.svg"}
+            alt="Add Icon"
+          />
+          Add New
+        </button>
       </div>
 
       <table className={styles.table2}>
@@ -101,28 +108,28 @@ const CategoryManagement = () => {
                 {editableCategory?.idCategorie === category.idCategorie ? (
                   <input
                     type="text"
-                    value={category.created_at}
-                    onChange={(e) => handleInputChange(e, "created_at")}
+                    value={category.createdAt}
+                    onChange={(e) => handleInputChange(e, "createdAt")}
                   />
                 ) : (
-                  category.created_at
+                  category.createdAt
                 )}
               </td>
               <td>
                 {editableCategory?.idCategorie === category.idCategorie ? (
                   <input
                     type="text"
-                    value={category.updated_at}
-                    onChange={(e) => handleInputChange(e, "updated_at")}
+                    value={category.updatedAt}
+                    onChange={(e) => handleInputChange(e, "updatedAt")}
                   />
                 ) : (
-                  category.updated_at
+                  category.updatedAt
                 )}
               </td>
               <td>
                 {editableCategory?.idCategorie === category.idCategorie ? (
                   <button onClick={handleSave} className={styles.deletebutton}>
-                    Save
+                      <img className={styles.icondelete} src={process.env.PUBLIC_URL + '/icons/tick.svg'} alt="Save Icon" />
                   </button>
                 ) : (
                   <div className={styles.buttonContainer}>
@@ -130,7 +137,7 @@ const CategoryManagement = () => {
                       className={styles.deletebutton}
                       onClick={() => handleEdit(category)}
                     >
-                      Edit
+                        <img className={styles.icondelete} src={process.env.PUBLIC_URL + '/icons/update.svg'} alt="Update Icon" />
                     </button>
 
                   </div>

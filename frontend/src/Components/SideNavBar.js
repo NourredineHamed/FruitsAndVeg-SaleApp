@@ -27,11 +27,6 @@ const SideNavBar = ({ onCategoryClick }) => {
       category: "orders",
     },
 	{
-		text: "Stock",
-		icon: "icons/stock.svg",
-		category: "stock",
-	},
-	{
 		text: "Logout",
 		icon: "icons/Logout.svg",
 		category: "logout",
