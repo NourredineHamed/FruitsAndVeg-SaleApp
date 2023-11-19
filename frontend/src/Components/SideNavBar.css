@@ -97,6 +97,7 @@ font-family: 'Pacifico', cursive;}
 }
 .menu-item-icon {
 	fill: white;
+
   }
   
 .menu-item {
@@ -124,23 +125,21 @@ font-family: 'Pacifico', cursive;}
 	background-color: var(--primary);
 	
 }
-.menu-item img {
-	width: 30px;
-	padding: 0 20px;
-	margin: 6px;
-	
-}
+
 
 .nav-details {
 	display: flex;
 }
 .menu-item img {
-	width: 25px;
-	height: 25px;
-	padding:  10px;
-	background-color: rgb(151, 216, 151); 
-	}
+    width: 30px;
+    height: 30px;
+    padding: 0 2px;
+    fill: rgb(151, 216, 151);
+    transition: background-color 0.3s ease; /* Adding a smooth transition effect */
+}
 
 .menu-item:hover img {
-	background-color: rgb(102, 192, 102); 
+    background-color: rgb(213, 223, 213);
+    border-radius: 20%; /* Make the shape round */
+    fill: green; /* Set the color of the SVG on hover */
 }

@@ -16,16 +16,13 @@ export class CategorieService {
 
 
 
-
     async findAll(): Promise<CategoriePostEntity[]> {
         const queryBuilder = this.CategoriePostRepository.createQueryBuilder('categorie');
-        queryBuilder.innerJoin('categorie.products', 'product')
-            .select('categorie.idCategorie')
-            .addSelect('categorie.name')
-
+        queryBuilder.leftJoinAndSelect('categorie.products', 'product'); // Use leftJoinAndSelect instead of innerJoin
+      
         return await queryBuilder.getMany();
-
-    }
+      }
+      
 
 
 

@@ -36,6 +36,8 @@ export class ProductService {
                     'product.sellType',
                     'product.remainingQuantity', 
                     'product.isTop' ,
+                    'categorie.name AS categoryName',
+                    'product.categorieIdCategorie'
                 ])
                 .orderBy(`product.${order}`, orderC);
         } else {
@@ -49,6 +51,8 @@ export class ProductService {
                     'product.sellType',
                     'product.remainingQuantity', 
                     'product.isTop' ,
+                    'categorie.name AS categoryName',
+                    'product.categorieIdCategorie'
                 ])
                 .orderBy(`product.${order}`, orderC);
         }
