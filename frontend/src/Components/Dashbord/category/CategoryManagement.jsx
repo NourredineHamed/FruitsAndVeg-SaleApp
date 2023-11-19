@@ -118,7 +118,7 @@ const CategoryManagement = () => {
     <div className={styles.div2}>
       <div className={styles.container2}>
         <h2>Category Management</h2>
-        <button onClick={handleAddRow} className={styles.button2}>
+        <button onClick={handleAddRow} className={styles.container2}>
           <img
             className={styles.icon}
             src={process.env.PUBLIC_URL + "/icons/add.svg"}

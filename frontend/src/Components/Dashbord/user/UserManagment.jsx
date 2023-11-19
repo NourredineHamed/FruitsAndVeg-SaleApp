@@ -55,7 +55,7 @@ const UserManagment = () => {
     <div className={styles.div5}>
       <div className={styles.container5}>
         <h2>User Management</h2>
-        <button onClick={handleAddRow} className={styles.button5}>
+        <button onClick={handleAddRow} className={styles.container5}>
           <img className={styles.icon} src={process.env.PUBLIC_URL + './icons/add.svg'} alt="Save Icon" />
           Add New
         </button>

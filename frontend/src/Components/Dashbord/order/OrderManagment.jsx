@@ -74,7 +74,7 @@ const OrderManagement = () => {
     <div className={styles.div4}>
       <div className={styles.container4}>
         <h2>Order Management</h2>
-        <button onClick={handleAddRow} className={styles.button4}>
+        <button onClick={handleAddRow} className={styles.container4}>
           <img
             className={styles.icon}
             src={process.env.PUBLIC_URL + "/icons/add.svg"}

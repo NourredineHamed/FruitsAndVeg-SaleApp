@@ -104,7 +104,7 @@ const ProductManagement = () => {
       sellType: "",
       price: 0,
       urlImg: "",
-      categorieIdCategorie: null,
+      categorieIdCategorie: categories.length > 0 ? categories[0].idCategorie : null,
       remainingQuantity: 0,
     };
 
@@ -357,7 +357,11 @@ const ProductManagement = () => {
                       onClick={() => handleSave(product.idProduct)}
                       className={styles.deletebutton}
                     >
-                         <img className={styles.icondelete} src={process.env.PUBLIC_URL + '/icons/tick.svg'} alt="Save Icon" />
+                                         <img
+                      className={styles.icondelete}
+                      src={process.env.PUBLIC_URL + "/icons/tick.svg"}
+                      alt="Save Icon"
+                    />
                     </button>
                   </div>
                 ) : (
@@ -366,13 +370,21 @@ const ProductManagement = () => {
                       onClick={() => handleEdit(product.idProduct)}
                       className={styles.deletebutton}
                     >
-                    <img className={styles.icondelete} src={process.env.PUBLIC_URL + '/icons/update.svg'} alt="Update Icon" />
+                                           <img
+                        className={styles.icondelete}
+                        src={process.env.PUBLIC_URL + "/icons/update.svg"}
+                        alt="Update Icon"
+                      />
                     </button>
                     <button
                       onClick={() => handleDelete(product.idProduct)}
                       className={styles.deletebutton} // Apply the button class
                     >
-                               <img className={styles.icondelete} src={process.env.PUBLIC_URL + '/icons/Delete.svg'} alt="Delete Icon" />
+                      <img
+                        className={styles.icondelete}
+                        src={process.env.PUBLIC_URL + "/icons/Delete.svg"}
+                        alt="Delete Icon"
+                      />
                     </button>
                   </div>
                 )}
