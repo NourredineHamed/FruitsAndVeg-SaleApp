@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
@@ -20,30 +20,39 @@ export class ProductService {
 
 
     async paginate(options: IPaginationOptions, id: number, order: string, orderC: "DESC" | "ASC"): Promise<Pagination<ProductPostEntity>> {
-
-
         const queryBuilder = this.ProductPostRepository.createQueryBuilder('product');
-        queryBuilder.leftJoinAndSelect("product.categorie", "categorie")
-
+        queryBuilder.leftJoinAndSelect("product.categorie", "categorie");
+    
         if (id) {
             const ids = Array.isArray(id) ? id : [id];
             queryBuilder
                 .where(`"categorie"."idCategorie" IN (:...ids)`, { ids })
                 .andWhere("product.remainingQuantity > 0")
-                .select('product.name')
-                .addSelect('product.urlImg')
-                .addSelect('product.price')
-                .addSelect('product.sellType')
+                .select([
+                    'product.idProduct',
+                    'product.name',
+                    'product.urlImg',
+                    'product.price',
+                    'product.sellType',
+                    'product.remainingQuantity', 
+                    'product.isTop' ,
+                ])
                 .orderBy(`product.${order}`, orderC);
-
+        } else {
+            queryBuilder
+                .where("product.remainingQuantity > 0")
+                .select([
+                    'product.idProduct',
+                    'product.name',
+                    'product.urlImg',
+                    'product.price',
+                    'product.sellType',
+                    'product.remainingQuantity', 
+                    'product.isTop' ,
+                ])
+                .orderBy(`product.${order}`, orderC);
         }
-        queryBuilder
-            .where("product.remainingQuantity > 0")
-            .select('product.name')
-            .addSelect('product.urlImg')
-            .addSelect('product.price')
-            .addSelect('product.sellType')
-            .orderBy(`product.${order}`, orderC);
+    
         return paginate<ProductPostEntity>(queryBuilder, options);
     }
 
@@ -105,9 +114,17 @@ export class ProductService {
     //     return from(this.ProductPostRepository.find());
 
     // }
-    createProduct(productPost: CreateProductDto): Promise<ProductPostEntity> {
-        return this.ProductPostRepository.save(productPost);
-    }
+    async createProduct(productPost: CreateProductDto): Promise<ProductPostEntity> {
+        try {
+          // Simulate an error for testing
+          // Comment out the next line if you don't want to simulate an error
+          // throw new Error('An error occurred while creating the product.');
+    
+          return await this.ProductPostRepository.save(productPost);
+        } catch (error) {
+            // If validation fails, throw a BadRequestException with details
+            throw new BadRequestException('Validation failed', error);
+          }}
 
     updateProduct(id: number, productPost: CreateProductDto): Promise<UpdateResult> { 
         productPost.updatedAt = new Date();

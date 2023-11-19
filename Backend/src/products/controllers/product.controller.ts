@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Put, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Post, Get, Put, Param, Delete, Logger, BadRequestException } from '@nestjs/common';
 import { Query, UsePipes } from '@nestjs/common/decorators';
 import { DefaultValuePipe, ParseIntPipe, ValidationPipe } from '@nestjs/common/pipes';
 import { Pagination } from 'nestjs-typeorm-paginate';
@@ -39,14 +39,16 @@ export class ProductController {
         };
         return await this.productService.paginateTopProducts(options);
     }
-
     @Post('create')
     @UsePipes(ValidationPipe)
     create(@Body() post: CreateProductDto) {
-        this.productService.createProduct(post)
-        return { data: post };
-    }    
-
+      try {
+        const result = this.productService.createProduct(post);
+        return { data: result };
+      }  catch (error) {
+        // If validation fails, throw a BadRequestException with details
+        throw new BadRequestException('Validation failed', error);
+      }}
 
     @Get('details/:id')
     async getProductDetails(@Param('id', ParseIntPipe) id: number): Promise<ProductPostEntity> {

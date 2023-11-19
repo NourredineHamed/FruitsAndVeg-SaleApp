@@ -1,78 +1,179 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import styles from "./ProductManagement.module.css";
 
 const ProductManagement = () => {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Product 1",
-      isTop: true,
-      setType: "Type 1",
-      price: 10.99,
-      urlimg: "image1.jpg",
-      remainingQuantity: 50,
-    },
-    {
-      id: 2,
-      name: "Product 2",
-      isTop: false,
-      setType: "Type 2",
-      price: 19.99,
-      urlimg: "image2.jpg",
-      remainingQuantity: 20,
-    },
-    {
-      id: 3,
-      name: "Product 3",
-      isTop: true,
-      setType: "Type 1",
-      price: 15.99,
-      urlimg: "image3.jpg",
-      remainingQuantity: 10,
-    },
-  ]);
+  const [products, setProducts] = useState([]);
 
-  const [editableProduct, setEditableProduct] = useState(null);
+  // Use an object to track the edit state for each product
+  const [editableProducts, setEditableProducts] = useState(null);
 
-  const handleEdit = (product) => {
-    setEditableProduct(product);
+  useEffect(() => {
+    console.log('Products:', products);
+    console.log('Editable Products:', editableProducts);
+    // Fetch products from the API when the component mounts
+    fetchProducts();
+  }, []); // Add dependencies if needed
+  
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/api/product");
+      console.log(response.data); // Log the response data
+
+      const responseData = response.data;
+      const fetchedProducts = Array.isArray(responseData.items) ? responseData.items : [];
+
+      // Initialize the edit state for each product
+      const initialEditableProducts = fetchedProducts.reduce((acc, product) => {
+        acc[product.idProduct] = false;
+        return acc;
+      }, {});
+
+      setProducts(fetchedProducts);
+      setEditableProducts(initialEditableProducts);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      console.log("Response:", error.response); // Log the error response
+    }
   };
 
-  const handleSave = () => {
-    setEditableProduct(null);
+  const handleEdit = (productId) => {
+    // Set the edit state to true for the selected product
+    setEditableProducts({ ...editableProducts, [productId]: true });
   };
 
-  const handleDelete = (productId) => {
-    const filteredProducts = products.filter(
-      (product) => product.id !== productId
-    );
-    setProducts(filteredProducts);
+  const handleDelete = async (productId) => {
+    try {
+      // Make an API request to delete the product
+      await axios.delete(`http://localhost:4000/api/product/delete/${productId}`);
+  
+      // If the delete request is successful, update the state
+      const filteredProducts = products.filter(
+        (product) => product.idProduct !== productId
+      );
+      setProducts(filteredProducts);
+    } catch (error) {
+      // Handle errors if the API request fails
+      console.error('Error deleting product:', error);
+    }
   };
-
-  const handleInputChange = (e, field, product) => {
-    const updatedProducts = products.map((p) => {
-      if (p.id === product.id) {
-        return { ...p, [field]: e.target.value };
+  const handleInputChange = (e, field, productId) => {
+    const updatedProducts = products.map((product) => {
+      if (product.idProduct === productId) {
+        return { ...product, [field]: field === "isTop" ? e.target.checked : e.target.value };
       }
-      return p;
+      return product;
     });
     setProducts(updatedProducts);
   };
-
+  
   const handleAddRow = () => {
-    const newId = Math.max(...products.map((product) => product.id)) + 1;
+    // Use a temporary flag to indicate that this is a new product
     const newProduct = {
-      id: newId,
+      idProduct: null, // Set idProduct to null for new products
+      isNew: true, // Add a flag to indicate that this is a new product
       name: "",
-      isTop: false,
-      setType: "",
+      isTop: false, // Initialize isTop to false
+      sellType: "",
       price: 0,
-      urlimg: "",
+      urlImg: "",
+      categorieIdCategorie: 1,
       remainingQuantity: 0,
     };
+
+    // Add the new product to the state
     setProducts([...products, newProduct]);
-    setEditableProduct(newProduct);
+
+    // Set the edit state to true for the newly added product
+    setEditableProducts({ ...editableProducts, [newProduct.idProduct]: true });
   };
+
+  const handleSave = async (productId) => {
+    try {
+      if (productId === null) {
+        const newProductIndex = products.findIndex((p) => p.isNew === true);
+  
+        if (newProductIndex !== -1) {
+          const newProduct = products[newProductIndex];
+  
+          // Extract the new product data, excluding the isNew flag
+          const { isNew, ...newProductData } = newProduct;
+  
+          // Convert price and remainingQuantity to numbers
+          const numericPrice = parseFloat(newProductData.price);
+          const numericRemainingQuantity = parseInt(newProductData.remainingQuantity, 10);
+  
+          // Make an API request to create the new product
+          const response = await axios.post('http://localhost:4000/api/product/create', {
+            ...newProductData,
+            price: numericPrice,
+            remainingQuantity: numericRemainingQuantity,
+          });
+  
+          // Update the new product in the state with the actual ID from the response
+          const createdProduct = response.data;
+  
+          // Update the state by replacing the new product with the created one
+          setProducts((prevProducts) => {
+            const updatedProducts = [...prevProducts];
+            updatedProducts.splice(newProductIndex, 1, createdProduct);
+            return updatedProducts;
+          });
+  
+          // Set the edit state to false for the newly created product
+          setEditableProducts((prevEditableProducts) => {
+            const newEditableProducts = { ...prevEditableProducts };
+            delete newEditableProducts[newProduct.idProduct]; // Remove temporary flag
+            newEditableProducts[createdProduct.idProduct] = false; // Set the actual ID
+            return newEditableProducts;
+          });
+  
+          // Fetch the updated data again
+          await fetchProducts();
+        }
+      } else {
+        const updatedProductIndex = products.findIndex((p) => p.idProduct === productId);
+        if (updatedProductIndex !== -1) {
+          const updatedProduct = products[updatedProductIndex];
+  
+          // Hardcode the categorieIdCategorie value
+          const hardcodedCategorieId = 1; // Change this value to the desired category ID
+  
+          // Add the hardcoded categorieIdCategorie to the updatedProduct
+          updatedProduct.categorieIdCategorie = hardcodedCategorieId;
+  
+          // Make an API request to update the product
+          await axios.put(`http://localhost:4000/api/product/update/${productId}`, updatedProduct);
+  
+          // Update the product in the state
+          setProducts((prevProducts) => {
+            const updatedProducts = [...prevProducts];
+            updatedProducts.splice(updatedProductIndex, 1, updatedProduct);
+            return updatedProducts;
+          });
+  
+          // Set the edit state to false for the updated product
+          setEditableProducts((prevEditableProducts) => {
+            const newEditableProducts = { ...prevEditableProducts };
+            newEditableProducts[productId] = false;
+            return newEditableProducts;
+          });
+  
+          // Fetch the updated data again (if needed)
+          // await fetchProducts();
+        }
+      }
+    } catch (error) {
+      console.error('Error saving product:', error);
+      console.log('Error response:', error.response); // Log the full error response
+    }
+  };
+  
+  
+  
+  
+  
+  
 
   return (
     <div className={styles.div4}>
@@ -102,112 +203,99 @@ const ProductManagement = () => {
         </thead>
         <tbody>
           {products.map((product) => (
-            <tr key={product.id}>
-              <td>{product.id}</td>
+            <tr key={product.idProduct}>
+              <td>{product.idProduct}</td>
               <td>
-                {editableProduct?.id === product.id ? (
+                {editableProducts[product.idProduct] ? (
                   <input
                     type="text"
                     value={product.name}
-                    onChange={(e) => handleInputChange(e, "name", product)}
+                    onChange={(e) => handleInputChange(e, "name", product.idProduct)}
                   />
                 ) : (
                   product.name
                 )}
               </td>
               <td>
-                {editableProduct?.id === product.id ? (
-                  <input
-                    type="checkbox"
-                    checked={product.isTop}
-                    onChange={(e) => handleInputChange(e, "isTop", product)}
-                  />
-                ) : (
-                  product.isTop.toString()
-                )}
-              </td>
+  {editableProducts[product.idProduct] ? (
+    <input
+      type="checkbox"
+      checked={product.isTop}
+      onChange={(e) => handleInputChange(e, "isTop", product.idProduct)}
+    />
+  ) : (
+    <span>{product.isTop ? "True" : "False"}</span>
+  )}
+</td>
+
               <td>
-                {editableProduct?.id === product.id ? (
+                {editableProducts[product.idProduct] ? (
                   <input
                     type="text"
-                    value={product.setType}
-                    onChange={(e) => handleInputChange(e, "setType", product)}
+                    value={product.sellType}
+                    onChange={(e) => handleInputChange(e, "sellType", product.idProduct)}
                   />
                 ) : (
-                  product.setType
+                  product.sellType
                 )}
               </td>
               <td>
-                {editableProduct?.id === product.id ? (
+                {editableProducts[product.idProduct] ? (
                   <input
                     type="number"
                     step="0.01"
                     value={product.price}
-                    onChange={(e) => handleInputChange(e, "price", product)}
+                    onChange={(e) => handleInputChange(e, "price", product.idProduct)}
                   />
                 ) : (
-                  product.price.toFixed(2)
+                  product.price
                 )}
               </td>
               <td>
-                {editableProduct?.id === product.id ? (
+                {editableProducts[product.idProduct] ? (
                   <input
                     type="text"
-                    value={product.urlimg}
-                    onChange={(e) => handleInputChange(e, "urlimg", product)}
+                    value={product.urlImg}
+                    onChange={(e) => handleInputChange(e, "urlImg", product.idProduct)}
                   />
                 ) : (
-                  product.urlimg
+                  product.urlImg
                 )}
               </td>
               <td>
-                {editableProduct?.id === product.id ? (
+                {editableProducts[product.idProduct] ? (
                   <input
                     type="number"
                     value={product.remainingQuantity}
-                    onChange={(e) =>
-                      handleInputChange(e, "remainingQuantity", product)
-                    }
+                    onChange={(e) => handleInputChange(e, "remainingQuantity", product.idProduct)}
                   />
                 ) : (
                   product.remainingQuantity
                 )}
               </td>
               <td>
-                {editableProduct?.id === product.id ? (
+                {editableProducts[product.idProduct] ? (
                   <div>
                     <button
-                      onClick={handleSave}
+                      onClick={() => handleSave(product.idProduct)}
                       className={styles.deletebutton}
                     >
-                      <img
-                        className={styles.icondelete}
-                        src="./icons/tick.svg"
-                        alt="Save Icon"
-                      />
+                      Save
                     </button>
                   </div>
                 ) : (
                   <div  className={styles.buttonContainer}>
                     <button
-                      onClick={() => handleEdit(product)}
+                      onClick={() => handleEdit(product.idProduct)}
                       className={styles.deletebutton}
                     >
-                      <img
-                        className={styles.icondelete}
-                        src={process.env.PUBLIC_URL + "./icons/update.svg"}
-                        alt="Save Icon"
-                      />
+                      Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(product.id)}
+                      onClick={() => handleDelete(product.idProduct)}
                       className={styles.deletebutton} // Apply the button class
                     >
-                      <img
-                        className={styles.icondelete}// Apply the icon class
-                        src={process.env.PUBLIC_URL + "./icons/Delete.svg"}
-                        alt="Delete Icon"
-                      />
+                      Delete
                     </button>
                   </div>
                 )}

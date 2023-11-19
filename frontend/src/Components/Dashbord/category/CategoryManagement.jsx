@@ -1,60 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Category.module.css";
 
 const CategoryManagement = () => {
-  const [categories, setCategories] = useState([
-    {
-      idCategory: 1,
-      name: "Category 1",
-      created_at: "2023-05-01",
-      updated_at: "2023-05-02",
-    },
-    {
-      idCategory: 2,
-      name: "Category 2",
-      created_at: "2023-05-03",
-      updated_at: "2023-05-04",
-    },
-    {
-      idCategory: 3,
-      name: "Category 3",
-      created_at: "2023-05-05",
-      updated_at: "2023-05-06",
-    },
-  ]);
-
+  const [categories, setCategories] = useState([]);
   const [editableCategory, setEditableCategory] = useState(null);
+
+  useEffect(() => {
+    // Fetch categories from the API when the component mounts
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/api/categorie/allcat");
+      const data = await response.json();
+      setCategories(data);
+      console.log(response);
+    } catch (error) {
+      
+      console.error("Error fetching categories:", error);
+    }
+  };
 
   const handleEdit = (category) => {
     setEditableCategory(category);
   };
 
-  const handleSave = () => {
-    setEditableCategory(null);
+  const handleSave = async () => {
+    try {
+      await fetch(`http://localhost:4000/api/categorie/update/${editableCategory.idCategorie}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editableCategory),
+      });
+      fetchCategories(); // Refresh the category list after updating
+      setEditableCategory(null);
+    } catch (error) {
+      console.error("Error updating category:", error);
+    }
   };
 
-  const handleDelete = (categoryId) => {
-    const filteredCategories = categories.filter(
-      (category) => category.idCategory !== categoryId
-    );
-    setCategories(filteredCategories);
-  };
 
-  const handleInputChange = (e, field, category) => {
-    const updatedCategories = categories.map((c) => {
-      if (c.idCategory === category.idCategory) {
-        return { ...c, [field]: e.target.value };
-      }
-      return c;
-    });
-    setCategories(updatedCategories);
+
+  const handleInputChange = (e, field) => {
+    const updatedCategory = { ...editableCategory, [field]: e.target.value };
+    setEditableCategory(updatedCategory);
   };
 
   const handleAddRow = () => {
-    const newId =
-      Math.max(...categories.map((category) => category.idCategory)) + 1;
     const newCategory = {
-      idCategory: newId,
       name: "",
       created_at: "",
       updated_at: "",
@@ -67,14 +63,7 @@ const CategoryManagement = () => {
     <div className={styles.div2}>
       <div className={styles.container2}>
         <h2>Category Management</h2>
-        <button onClick={handleAddRow} className={styles.button2}>
-          <img
-            className={styles.icon}
-            src={process.env.PUBLIC_URL + "/icons/add.svg"}
-            alt="Add Icon"
-          />
-          Add New
-        </button>
+     
       </div>
 
       <table className={styles.table2}>
@@ -95,71 +84,55 @@ const CategoryManagement = () => {
         </thead>
         <tbody>
           {categories.map((category) => (
-            <tr key={category.idCategory}>
-              <td>{category.idCategory}</td>
+            <tr key={category.idCategorie}>
+              <td>{category.idCategorie}</td>
               <td>
-                {editableCategory?.idCategory === category.idCategory ? (
+                {editableCategory?.idCategorie === category.idCategorie ? (
                   <input
                     type="text"
                     value={category.name}
-                    onChange={(e) => handleInputChange(e, "name", category)}
+                    onChange={(e) => handleInputChange(e, "name")}
                   />
                 ) : (
                   category.name
                 )}
               </td>
               <td>
-                {editableCategory?.idCategory === category.idCategory ? (
+                {editableCategory?.idCategorie === category.idCategorie ? (
                   <input
                     type="text"
                     value={category.created_at}
-                    onChange={(e) =>
-                      handleInputChange(e, "created_at", category)
-                    }
+                    onChange={(e) => handleInputChange(e, "created_at")}
                   />
                 ) : (
                   category.created_at
                 )}
               </td>
               <td>
-                {editableCategory?.idCategory === category.idCategory ? (
+                {editableCategory?.idCategorie === category.idCategorie ? (
                   <input
                     type="text"
                     value={category.updated_at}
-                    onChange={(e) =>
-                      handleInputChange(e, "updated_at", category)
-                    }
+                    onChange={(e) => handleInputChange(e, "updated_at")}
                   />
                 ) : (
                   category.updated_at
                 )}
               </td>
               <td>
-                {editableCategory?.idCategory === category.idCategory ? (
-                  
+                {editableCategory?.idCategorie === category.idCategorie ? (
                   <button onClick={handleSave} className={styles.deletebutton}>
-                    <img
-                      className={styles.icondelete}
-                      src={process.env.PUBLIC_URL + "/icons/tick.svg"}
-                      alt="Save Icon"
-                    />
+                    Save
                   </button>
                 ) : (
-                  <div  className={styles.buttonContainer}>
-                    <button className={styles.deletebutton} onClick={() => handleEdit(category)}>
-                      <img
-                        className={styles.icondelete}
-                        src={process.env.PUBLIC_URL + "/icons/update.svg"}
-                        alt="Update Icon"
-                      />
+                  <div className={styles.buttonContainer}>
+                    <button
+                      className={styles.deletebutton}
+                      onClick={() => handleEdit(category)}
+                    >
+                      Edit
                     </button>
-                    <button className={styles.deletebutton} onClick={() => handleDelete(category.idCategory)}>
-                      <img
-                        className={styles.icondelete}
-                        src={process.env.PUBLIC_URL + "/icons/Delete.svg"}
-                        alt="Delete Icon"
-                      />
-                    </button>
+
                   </div>
                 )}
               </td>
