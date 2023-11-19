@@ -31,6 +31,19 @@ const CategoryManagement = () => {
     // Set the editableCategory without the 'products' property
     setEditableCategory(categoryWithoutProducts);
   };
+  const handleDelete = async (categoryId) => {
+    try {
+      // Make a DELETE request to the API
+      await fetch(`http://localhost:4000/api/categorie/delete/${categoryId}`, {
+        method: "DELETE",
+      });
+  
+      // After successful deletion, refresh the category list
+      fetchCategories();
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
+  };
   
 
   const handleSave = async () => {
@@ -168,6 +181,12 @@ const CategoryManagement = () => {
                         src={process.env.PUBLIC_URL + "/icons/update.svg"}
                         alt="Update Icon"
                       />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(category.idCategorie)}
+                      className={styles.deletebutton} // Apply the button class
+                    >
+                               <img className={styles.icondelete} src={process.env.PUBLIC_URL + '/icons/Delete.svg'} alt="Delete Icon" />
                     </button>
                   </div>
                 )}
